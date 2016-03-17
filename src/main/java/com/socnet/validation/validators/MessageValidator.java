@@ -2,12 +2,13 @@ package com.socnet.validation.validators;
 
 
 import com.socnet.entity.Message;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+@Component
 public class MessageValidator implements Validator {
-
 
     @Override
     public boolean supports(Class<?> clazz) {

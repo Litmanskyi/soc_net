@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.socnet.entity.Message;
 import com.socnet.entity.Room;
 import com.socnet.entity.User;
-import com.socnet.entity.dto.AddUserToRoomDto;
 import com.socnet.entity.dto.RoomCreateDto;
 import com.socnet.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.INTEGER, length = 8)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING, length = 8)
 public class Asset extends BaseEntity {
     public interface AssetView extends BaseView {
     }

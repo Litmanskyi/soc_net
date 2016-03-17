@@ -80,11 +80,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setEmail(user.getEmail().toLowerCase());
 
-        //todo PrePersist it!
-        Wall wall = new Wall();
-        user.setAvailable(true);
-        wall.setUser(user);
-        user.setWall(wall);
+        //todo +++ PrePersist it!
         user = userPersistence.save(user);
 
         logger.info(String.format(SAVE_LOG, user.getFirstName(), user.getLastName(), user.getEmail()));

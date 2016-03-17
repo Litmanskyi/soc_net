@@ -94,10 +94,27 @@ public class User extends BaseEntity implements Attached {
     private List<Asset> avatars; //todo rename to avatars
 
     //todo +++ prepersist and preupdate where email.toLowerCase()
+
     @PrePersist
+    public void beforeSave(){
+        createWallForNewUser();
+        setEmailToLowerCase();
+    }
+
     @PreUpdate
-    public void setEmailToLowerCase(){
+    public void beforeUpdate(){
+        setEmailToLowerCase();
+    }
+
+    private void setEmailToLowerCase(){
         this.email = email.toLowerCase();
+    }
+
+    private void createWallForNewUser(){
+        Wall wall = new Wall();
+        this.setAvailable(true);
+        wall.setUser(this);
+        this.setWall(wall);
     }
 
     @Override

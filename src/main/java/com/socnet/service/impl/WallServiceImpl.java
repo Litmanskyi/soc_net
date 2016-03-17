@@ -29,15 +29,7 @@ public class WallServiceImpl implements WallService {
     @Autowired
     PostService postService;
 
-    //todo delete
-    @Override
-    @Transactional
-    public Wall createWall(Wall wall) {
-        if (wall.getUser() == null) {
-            throw new IllegalArgumentException("Wall without user!");
-        }
-        return wallPersistence.save(wall);
-    }
+    //todo +++ delete
 
     @Override
     public Wall getWallByUserId(String id) {
