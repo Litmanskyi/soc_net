@@ -1,5 +1,6 @@
 package com.socnet;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +18,8 @@ import java.io.File;
 public class Application {
 
     private static ConfigurableApplicationContext run;
-    public final static String ROOT = "src/main/resources/upload-dir/";//todo set it in props
+
+    //public final static String ROOT = "src/main/resources/upload-dir/";//todo ++ set it in props
 
     public static void main(String[] args) {
         run = SpringApplication.run(Application.class, args);
@@ -26,14 +28,6 @@ public class Application {
     public static <T> T getBean(Class<T> t) {
         return run.getBean(t);
     }
-
-    @Bean
-    CommandLineRunner init() {
-        return (String[] args) -> {
-            new File(ROOT).mkdir();
-        };
-    }
-
 
     @Bean
     public MessageSource messageSource() {//todo settings validate message

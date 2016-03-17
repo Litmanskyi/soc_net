@@ -112,7 +112,7 @@ public class TestDataInitializer {
                     postService.addPostToUserWall(userWall.getId(), post);
                 }
                 for (User user : userList) {
-                    login(user.getEmail());//todo use random
+                    login(user.getEmail());//todo ++ use random - wrong
                     for (int i = 0; i < 8; i++) {
                         try {
                             int r = random.nextInt(5 - 1 + 1) + 1;

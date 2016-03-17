@@ -30,7 +30,6 @@ public class RoomServiceImpl implements RoomService {
     public static final String ROOM_NOT_FOUND = "Room not found!";
     public static final String ADD_YOURSELF_TO_CHAT = "You can't add yourself to chat!";
     public static final String YOU_DON_T_HAVE_RIGHTS_TO_DELETE = "You don't have rights to delete!";
-    public static final String DELETE_USER_FROM_DIALOG = "You can't delete user from dialog";
 
     @Autowired
     private UserService userService;
@@ -40,9 +39,6 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     private RelationService relationService;
-
-    @Autowired
-    private MessageService messageService;
 
     @Transactional
     @Override
@@ -106,10 +102,11 @@ public class RoomServiceImpl implements RoomService {
         User currentUser = AuthenticatedUtils.getCurrentAuthUser();
         Set<User> users = room.getUsers();
 
-        List<User> newUsers = userService.findUsersByIds(usersIds);
+        List<User> newUsers = userService.findUsersByIds(usersIds);//// TODO: 17.03.16 +++
+
         checkAddUsersToRoom(room, newUsers, currentUser);
-        users.addAll(users);
-//        room.setUsers(users);
+
+        users.addAll(newUsers);
         return roomPersistence.save(room);
     }
 
@@ -139,20 +136,30 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room deleteUserFromRoom(String roomId, String userId) {
-        User uToRemove = userService.findUserById(userId);
+        User userToRemove = userService.findUserById(userId);
         Room room = findRoom(roomId);
-        User currUser = AuthenticatedUtils.getCurrentAuthUser();
+        User currentUser = AuthenticatedUtils.getCurrentAuthUser();
 
-        checkUserAndRoom(uToRemove, room);
-        if (room.isDialog()) {
-            throw new IllegalArgumentException(DELETE_USER_FROM_DIALOG);
-        }
-        if (!room.getAdmin().equals(currUser)) {
+        checkUserAndRoom(userToRemove, room);
+
+        if (!room.getAdmin().equals(currentUser) && !room.isDialog()) {
             throw new AccessDeniedException(YOU_DON_T_HAVE_RIGHTS_TO_DELETE);
         }
 
-        room.getUsers().remove(uToRemove);
+        room.getUsers().remove(userToRemove);
+
+        if (room.getUsers().size() == 0) {
+            roomPersistence.delete(room.getId());
+        } else {
+            roomPersistence.save(room);
+        }
+
         return roomPersistence.save(room);
+    }
+
+    //todo +++ unite leave and delete from room
+    @Override
+    public void leaveRoom(String roomId) {
     }
 
     @Override
@@ -165,21 +172,6 @@ public class RoomServiceImpl implements RoomService {
         return room.getUsers();
     }
 
-    //todo unite leave and delete from room
-    @Override
-    public void leaveRoom(String roomId) {
-        Room room = findRoom(roomId);
-        User currUser = AuthenticatedUtils.getCurrentAuthUser();
-
-        checkUserAndRoom(currUser, room);
-
-        room.getUsers().remove(currUser);
-        if (room.getUsers().size() == 0) {
-            roomPersistence.delete(room.getId());
-        } else {
-            roomPersistence.save(room);
-        }
-    }
 
     @Override
     public List<Room> findRoomsByCurrentUser() {

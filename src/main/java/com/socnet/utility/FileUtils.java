@@ -1,6 +1,7 @@
 package com.socnet.utility;
 
 import com.socnet.Application;
+import com.socnet.configuration.ConfProperties;
 import lombok.Cleanup;
 import org.apache.log4j.Logger;
 import org.springframework.util.FileCopyUtils;
@@ -13,32 +14,34 @@ import java.io.FileOutputStream;
 public class FileUtils {
 
     public static final String FILE_DOESN_T_EXIST = "File doesn't exist!";
-    public static final String FILE_IS_EMPTY = "You failed to upload  because the file was empty";
+    public static final String FILE_IS_EMPTY = "You failed to upload  because the multipartFile was empty";
     private static Logger logger = Logger.getLogger(FileUtils.class);
 
     /**
-     * @return path to file
+     * @return path to multipartFile
      */
-    public static String uploadFile(String dir, String fileName, MultipartFile file) {
+    public static String uploadFile(String dir, String fileName, MultipartFile multipartFile) {
 
-        if (file.isEmpty()) {
+        ConfProperties confProperties = Application.getBean(ConfProperties.class);
+
+        if (multipartFile.isEmpty()) {
             throw new IllegalArgumentException(FILE_IS_EMPTY);
         }
 
         logger.info(dir);
-        //todo refactor
-        File f = new File(Application.ROOT + dir);
+        //todo ++ refactor
+        File pathDir = new File(confProperties.getUploadPath() + dir);
 
-        if (f.mkdirs()) {
-            logger.info("Path directory: '" + f.getPath() + "'was created");
+        if (pathDir.mkdirs()) {
+            logger.info("Path directory: '" + pathDir.getPath() + "'was created");
         }
 
-        f = new File(f.getPath()+"/" + fileName);
+        File file = new File(pathDir.getPath()+"/" + fileName);
 
         try {
-            @Cleanup BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(f));
-            FileCopyUtils.copy(file.getInputStream(), stream);
-            return f.getPath();
+            @Cleanup BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
+            FileCopyUtils.copy(multipartFile.getInputStream(), stream);
+            return file.getPath();
         } catch (Exception e) {
             throw new IllegalStateException("You failed to upload  => " + e.getMessage());
         }
