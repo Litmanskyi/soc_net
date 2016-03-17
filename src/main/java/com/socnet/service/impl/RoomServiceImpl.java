@@ -3,7 +3,6 @@ package com.socnet.service.impl;
 import com.socnet.entity.Message;
 import com.socnet.entity.Room;
 import com.socnet.entity.User;
-import com.socnet.entity.dto.AddUserToRoomDto;
 import com.socnet.entity.dto.RoomCreateDto;
 import com.socnet.persistence.RoomPersistence;
 import com.socnet.service.MessageService;

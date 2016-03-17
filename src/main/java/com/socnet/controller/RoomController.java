@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.socnet.entity.Message;
 import com.socnet.entity.Room;
 import com.socnet.entity.User;
-import com.socnet.entity.dto.AddUserToRoomDto;
 import com.socnet.entity.dto.RoomCreateDto;
 import com.socnet.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +39,8 @@ public class RoomController {
     @JsonView(Room.RoomMessageView.class)
     @RequestMapping(value = "{id}",method = RequestMethod.POST)
     public Room addUserToRoom(@PathVariable("id") String roomId,
-                              @RequestBody AddUserToRoomDto dto){
-        return roomService.addUsersToRoom(roomId, dto.getUsersIds());
+                              @RequestBody Set<String> usersIds){
+        return roomService.addUsersToRoom(roomId, usersIds);
     }
 
     @JsonView(Room.RoomMessageView.class)

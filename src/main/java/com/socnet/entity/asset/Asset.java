@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING, length = 8)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.INTEGER, length = 8)
 public class Asset extends BaseEntity {
     public interface AssetView extends BaseView {
     }
@@ -29,10 +29,10 @@ public class Asset extends BaseEntity {
     @AnyMetaDef(
             idType = "string", metaType = "string",
             metaValues = {
-                    @MetaValue(targetEntity = Post.class, value = "PST"), // todo create ENUM for assets type
-                    @MetaValue(targetEntity = Message.class, value = "MSG"),
-                    @MetaValue(targetEntity = Comment.class, value = "CMT"),
-                    @MetaValue(targetEntity = User.class, value = "USR")
+                    @MetaValue(targetEntity = Post.class, value = "POST"), // todo +++ create ENUM for assets type
+                    @MetaValue(targetEntity = Message.class, value = "MESSAGE"),
+                    @MetaValue(targetEntity = Comment.class, value = "COMMENT"),
+                    @MetaValue(targetEntity = User.class, value = "USER")
             }
     )
     @JoinColumn(name = "asset_id", referencedColumnName = "id")
