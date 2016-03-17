@@ -17,15 +17,14 @@ import javax.validation.Valid;
 import java.util.List;
 
 
-@RequestMapping("/user/")
+@RequestMapping("/user")
 @RestController
 public class UserController {
-    private Logger logger = Logger.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteUser() {
         userService.deleteUser();
     }
@@ -38,7 +37,7 @@ public class UserController {
         return userService.findAllUsers();
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @JsonView(User.UserView.class)
     public
     @ResponseBody
@@ -59,13 +58,13 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "password/", method = RequestMethod.PUT, consumes = "application/json")
+    @RequestMapping(value = "/password", method = RequestMethod.PUT, consumes = "application/json")
     @JsonView(User.UserView.class)
     public User updatePassword(@RequestBody User user) {
         return userService.updatePassword(user);
     }
 
-    @RequestMapping(value = "current")
+    @RequestMapping(value = "/current")
     @JsonView(User.UserView.class)
     public User currentUser() {
         return AuthenticatedUtils.getCurrentAuthUser();

@@ -1,6 +1,5 @@
 package com.socnet;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +13,7 @@ import java.io.File;
 
 @SpringBootApplication
 //@EnableEurekaClient
-@PropertySource("classpath:messages.properties")
+//@PropertySource("classpath:messages.properties")
 public class Application {
 
     private static ConfigurableApplicationContext run;

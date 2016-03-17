@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -106,6 +107,11 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(updUser.getPassword());
         return userPersistence.save(user);
+    }
+
+    @Override
+    public List<User> findUsersByIds(Set<String> usersIds) {
+        return userPersistence.findAll(usersIds);
     }
 
 }

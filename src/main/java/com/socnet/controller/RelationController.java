@@ -39,7 +39,7 @@ public class RelationController {
         relationService.deleteFromBlacklist(userId);
     }
 
-    @RequestMapping(value = "/friends/", method = RequestMethod.GET)
+    @RequestMapping(value = "/friends", method = RequestMethod.GET)
     @JsonView(User.UserView.class)
     public List<User> findFriends() {
         return relationService.findFriends(AuthenticatedUtils.getCurrentAuthUser().getId());
@@ -51,13 +51,13 @@ public class RelationController {
         return relationService.findFriends(userId);
     }
 
-    @RequestMapping(value = "/blacklist/", method = RequestMethod.GET)
+    @RequestMapping(value = "/blacklist", method = RequestMethod.GET)
     @JsonView(User.UserView.class)
     public List<User> findFriendsInBlacklist() {
         return relationService.findBlacklist(AuthenticatedUtils.getCurrentAuthUser().getId());
     }
 
-    @RequestMapping(value = "/followers/", method = RequestMethod.GET)
+    @RequestMapping(value = "/followers", method = RequestMethod.GET)
     @JsonView(User.UserView.class)
     public List<User> findFollowers() {
         return relationService.findFollowers(AuthenticatedUtils.getCurrentAuthUser().getId());
