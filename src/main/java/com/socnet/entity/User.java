@@ -3,8 +3,12 @@ package com.socnet.entity;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.socnet.entity.asset.Asset;
 import com.socnet.entity.asset.Attached;
+import com.socnet.entity.asset.AvatarAsset;
 import com.socnet.entity.enumaration.Role;
 import com.socnet.validation.annotations.UniqueEmail;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.catalina.authenticator.Constants;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -20,9 +24,11 @@ import java.util.Set;
 @lombok.Setter
 @lombok.ToString(exclude = {"wall", "posts", "relations"})
 
-@Entity
+
 @UniqueEmail
+@Entity
 public class User extends BaseEntity implements Attached {
+
     public interface UserView extends Asset.AssetView {
     }
     public interface UserExtendView extends Asset.AssetView{
@@ -82,8 +88,26 @@ public class User extends BaseEntity implements Attached {
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Relation> relations;
 
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Transient
-    private List<Asset> assets; //todo rename to avatars
+    private List<Asset> avatars; //todo rename to avatars
 
-    //todo prepersist and preupdate where email.toLowerCase()
+    //todo +++ prepersist and preupdate where email.toLowerCase()
+    @PrePersist
+    @PreUpdate
+    public void setEmailToLowerCase(){
+        this.email = email.toLowerCase();
+    }
+
+    @Override
+    public void setAssets(List<Asset> assets) {
+        this.avatars = assets;
+    }
+
+    @Override
+    public List<Asset> getAssets() {
+        return avatars;
+    }
+
 }
