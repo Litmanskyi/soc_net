@@ -72,9 +72,9 @@ public class WallServiceImplTest {
         Assert.assertEquals(postList.get(0).getId(),POST_ID);
 
     }
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateWallWithoutUser() {
-        wallService.createWall(wall);
-    }
+//    @Test(expected = IllegalArgumentException.class)
+//    public void testCreateWallWithoutUser() {
+//        wallService.createWall(wall);
+//    }
 
 }
