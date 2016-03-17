@@ -4,15 +4,18 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.socnet.entity.Message;
 import com.socnet.entity.Room;
 import com.socnet.entity.User;
+import com.socnet.entity.dto.AddUserToRoomDto;
 import com.socnet.entity.dto.RoomCreateDto;
 import com.socnet.service.RoomService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.log4j.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/room/")

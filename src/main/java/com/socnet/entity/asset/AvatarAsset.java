@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 @Setter
 
 @Entity
-@DiscriminatorValue("AVATAR") //todo in enum
+@DiscriminatorValue("AVATAR") //todo +++ in enum
 public class AvatarAsset extends ImageAsset {
     public interface AvatarAssetView extends ImageAsset.AssetView{}
 

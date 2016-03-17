@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -51,9 +52,17 @@ public class TestDataInitializer {
     @Autowired
     private ConfProperties confProperties;
 
+
+
+    @PostConstruct
+    public void initPath() {
+        testDataPath = Paths.get(classLoader.getResource(confProperties.getTestDataResources()).getPath());
+    }
+
     public void addTestData() throws IOException {
 
-        testDataPath = Paths.get(confProperties.getTestDataResources());
+        // todo need fetch absolute path without classLoader!
+//        testDataPath = Paths.get(confProperties.getTestDataResources());
 
         Files.walkFileTree(testDataPath, new TestDataVisitor());
 
