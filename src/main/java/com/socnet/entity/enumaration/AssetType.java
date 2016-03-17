@@ -1,5 +1,10 @@
 package com.socnet.entity.enumaration;
 
 public enum AssetType {
-    IMAGE, VIDEO, AUDIO, FILE
+    IMAGE(){
+        @Override
+        public String toString() {
+            return "Image";
+        }
+    }, VIDEO, AUDIO, FILE
 }

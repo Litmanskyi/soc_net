@@ -4,18 +4,15 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.socnet.entity.Message;
 import com.socnet.entity.Room;
 import com.socnet.entity.User;
-import com.socnet.entity.dto.AddUserToRoomDto;
 import com.socnet.entity.dto.RoomCreateDto;
 import com.socnet.service.RoomService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.log4j.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/room/")
@@ -32,16 +29,16 @@ public class RoomController {
     }
 
     @JsonView(Room.RoomMessageView.class)
-    @RequestMapping(value = "{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "{id}", method = RequestMethod.GET)
     public List<Message> findMessages(@PathVariable("id") String roomId) {
         return roomService.findMessages(roomId);
     }
 
     @JsonView(Room.RoomMessageView.class)
-    @RequestMapping(value = "{id}",method = RequestMethod.POST)
+    @RequestMapping(value = "{id}", method = RequestMethod.POST)
     public Room addUserToRoom(@PathVariable("id") String roomId,
-                              @RequestBody AddUserToRoomDto dto){
-        return roomService.addUsersToRoom(roomId, dto.getUsersIds());
+                              @RequestBody Set<String> users) {
+        return roomService.addUsersToRoom(roomId, users);
     }
 
     @JsonView(Room.RoomMessageView.class)
@@ -56,6 +53,7 @@ public class RoomController {
     public Set<User> findUsersInTheRoom(@PathVariable("id") String roomId) {
         return roomService.findUsersByRoom(roomId);
     }
+
     @JsonView(Room.RoomMessageView.class)
     @RequestMapping(value = "{id}/leave", method = RequestMethod.DELETE)
     public void leaveUserFromRoom(@PathVariable("id") String roomId) {
@@ -69,9 +67,9 @@ public class RoomController {
     }
 
     @JsonView(Room.RoomView.class)
-    @RequestMapping(value = "{id}/title",method = RequestMethod.POST)
-    public Room setTitle(@PathVariable("id") String roomId,@RequestBody String title) {
-        return roomService.setNewTitle(roomId,title);
+    @RequestMapping(value = "{id}/title", method = RequestMethod.POST)
+    public Room setTitle(@PathVariable("id") String roomId, @RequestBody String title) {
+        return roomService.setNewTitle(roomId, title);
     }
 
 }
