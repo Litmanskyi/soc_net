@@ -12,7 +12,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -41,7 +40,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Message addMessageToRoom(String roomId, Message mes) {
+    public Message addMessageToRoom(String roomId, String mes) {
         User user = AuthenticatedUtils.getCurrentAuthUser();
         Room room = roomService.findRoom(roomId);
         if (!room.getUsers().contains(user)) { //todo to perm serv
@@ -50,7 +49,7 @@ public class MessageServiceImpl implements MessageService {
         Message message = new Message();
         message.setCreator(user);
         message.setRoom(room);
-        message.setMessage(mes.getMessage());
+        message.setMessage(mes);
         room.getMessages().add(message);
         return messagePersistence.save(message);
     }
