@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/room/{roomId}/message/")
+@RequestMapping("/room/{roomId}/message")
 public class MessageController {
     @Autowired
     private MessageService messageService;
@@ -42,7 +42,7 @@ public class MessageController {
         return null;
     }
 
-    @RequestMapping(value = "{messageId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{messageId}", method = RequestMethod.DELETE)
     public void deleteMessageFromRoom(@PathVariable("messageId") String messageId) {
         messageService.deleteMessageFromRoom(messageId);
     }

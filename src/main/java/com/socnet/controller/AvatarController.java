@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/avatar/")
+@RequestMapping("/avatar")
 public class AvatarController {
 
     @Autowired
@@ -21,7 +21,7 @@ public class AvatarController {
         return avatarService.setAvatar(file);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public void deleteAvatar(@PathVariable("id") String id) {
         avatarService.deleteAvatar(id);
     }

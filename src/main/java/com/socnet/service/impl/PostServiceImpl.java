@@ -24,22 +24,7 @@ public class PostServiceImpl implements PostService {
     private PostPersistence postPersistence;
 
     @Autowired
-    private WallService wallService;//todo remove unused fields
-
-    @Autowired
     private UserService userService;
-
-    //todo remove this method
-    @Transactional
-    @Override
-    public Post createPost(Post post) {
-        if (post.getCreator() == null || post.getWall() == null) {
-            throw new IllegalArgumentException("Without user or wall can't create post!");
-        }
-
-        return postPersistence.save(post);
-    }
-
 
     @Transactional
     @Override

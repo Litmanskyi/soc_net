@@ -11,7 +11,7 @@ import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping(value = "/post/")
+@RequestMapping(value = "/post")
 public class PostController {
 
     private Logger logger = Logger.getLogger(PostController.class);
@@ -23,13 +23,13 @@ public class PostController {
      * @param id   userId on whose wall is created post
      * @param post valid post
      */
-    @RequestMapping(value = "{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{userId}", method = RequestMethod.POST)
     @JsonView(Post.PostView.class)
     public Post addPost(@PathVariable("userId") String id, @RequestBody @Valid Post post) {
         return postService.addPostToUserWall(id, post);
     }
 
-    @RequestMapping(value = "{postId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{postId}", method = RequestMethod.DELETE)
     public void deletePost(@PathVariable("postId") String postId) {
         postService.deletePost(postId);
     }

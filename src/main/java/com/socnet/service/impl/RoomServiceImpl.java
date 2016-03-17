@@ -59,7 +59,7 @@ public class RoomServiceImpl implements RoomService {
     public Room startChatting(RoomCreateDto roomDto) {
         Set<User> receivers = new HashSet<>();
         User currentUser = AuthenticatedUtils.getCurrentAuthUser();
-        roomDto.getUsersId().forEach(receiverId ->{
+        roomDto.getUsersId().forEach(receiverId -> {
             User receiver = userService.findUserById(receiverId);
             if (receiver == null) {
                 throw new EntityNotFoundException(USER_NOT_FOUND);
@@ -106,15 +106,13 @@ public class RoomServiceImpl implements RoomService {
         User currentUser = AuthenticatedUtils.getCurrentAuthUser();
         Set<User> users = room.getUsers();
 
-        usersIds.forEach(userId -> {
-            User user = userService.findUserById(userId);//todo use findAll
-            checkAddUserToRoom(room, user, currentUser);
-            users.add(user);
-        });
-
-        room.setUsers(users);
+        List<User> newUsers = userService.findUsersByIds(usersIds);
+        checkAddUsersToRoom(room, newUsers, currentUser);
+        users.addAll(users);
+//        room.setUsers(users);
         return roomPersistence.save(room);
     }
+
 
     @Override
     public Room findRoom(String roomId) {
@@ -236,5 +234,11 @@ public class RoomServiceImpl implements RoomService {
             throw new AccessDeniedException(YOU_DON_T_BELONG_THIS_ROOM);
         }
 
+    }
+
+    private void checkAddUsersToRoom(Room room, List<User> newUsers, User currentUser) {
+        newUsers.forEach(user -> {
+            checkAddUserToRoom(room, user, currentUser);
+        });
     }
 }

@@ -144,21 +144,4 @@ public class PostServiceImplTest {
         postService.editPost(post);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreatePostWithoutUserCreator() {
-        post.setWall(wall);
-
-        postService.createPost(post);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreatePostWithoutWall() {
-        Post post = new Post();
-        post.setId(POST_ID);
-        User user = new User();
-        user.setId(USER_ID);
-        post.setCreator(user);
-
-        postService.createPost(post);
-    }
 }

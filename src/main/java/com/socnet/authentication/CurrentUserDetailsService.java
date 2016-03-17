@@ -1,4 +1,4 @@
-package com.socnet.service.impl;
+package com.socnet.authentication;
 
 import com.socnet.authentication.CurrentUser;
 import com.socnet.entity.User;
@@ -16,7 +16,7 @@ public class CurrentUserDetailsService implements UserDetailsService { //todo mo
     @Autowired
     private UserService userService;
 
-    Logger logger = Logger.getLogger(getClass()); //todo private
+    private Logger logger = Logger.getLogger(getClass());
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

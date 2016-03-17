@@ -109,7 +109,7 @@ public class TestDataInitializer {
                     login(userPosted.getEmail());
                     post.setWall(userWall.getWall());
                     post.setCreator(userPosted);
-                    postService.createPost(post);
+                    postService.addPostToUserWall(userWall.getId(), post);
                 }
                 for (User user : userList) {
                     login(user.getEmail());//todo use random
