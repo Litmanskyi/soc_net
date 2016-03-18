@@ -14,8 +14,6 @@ public interface RoomService {
 
     Room startChatting(RoomCreateDto roomDto);
 
-    Room addMessageToRoom(String roomId, String mes);
-
     Room addUsersToRoom(String roomId, Set<String> usersIds);
 
     Room findRoom(String roomId);

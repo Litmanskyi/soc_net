@@ -39,6 +39,20 @@ public class MessageServiceImpl implements MessageService {
         return room.getMessages();
     }
 
+    @Override
+    public Message addMessageToRoom(String roomId, String mes) {
+        Room room = roomService.findRoom(roomId);
+        if (room == null) {
+            throw new EntityNotFoundException(ROOM_NOT_FOUND);
+        }
+        User user = AuthenticatedUtils.getCurrentAuthUser();
+        if (!room.getUsers().contains(user)) { //todo to perm serv
+            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
+        }
+
+        return messagePersistence.save(new Message(user, room, mes));
+    }
+
 
     @Override
     public void deleteMessageFromRoom(String messageId) {

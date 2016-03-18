@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +28,6 @@ public class RoomServiceImpl implements RoomService {
     public static final String REPEATED_REQUEST = "User is already in this chat!";
     public static final String ADD_YOURSELF_TO_CHAT = "You can't add yourself to chat!";
     public static final String YOU_DON_T_HAVE_RIGHTS_TO_DELETE = "You don't have rights to delete!";
-    public static final String ACCESS_DENIED_RIGHTS = "User doesn't have rights!";
     public static final String ROOM_NOT_FOUND = "Room not found!";
     public static final String ERROR_CREATE_CHAT_WITHOUT_USER = "You can't create chat without user(s)!";
 
@@ -81,7 +79,7 @@ public class RoomServiceImpl implements RoomService {
         room.setTitle(roomDto.getTitle());
         room.setDialog(false);
         room.getUsers().addAll(receivers);
-        room.getMessages().add(new Message(currentUser, room, roomDto.getMessage()));
+        room.getMessages().add(messageService.addMessageToRoom(roomDto.getMessage(), room.getId()));
 
         return roomPersistence.save(room);
     }
@@ -95,23 +93,8 @@ public class RoomServiceImpl implements RoomService {
             room.getUsers().add(receiver);
 
         }
-
-        return addMessageToRoom(room.getId(), message);
-    }
-
-    @Override
-    public Room addMessageToRoom(String roomId, String mes) {
-        Room room = findRoom(roomId);
-        if (room == null) {
-            throw new EntityNotFoundException(ROOM_NOT_FOUND);
-        }
-        User user = AuthenticatedUtils.getCurrentAuthUser();
-        if (!room.getUsers().contains(user)) { //todo to perm serv
-            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
-        }
-        Message message = new Message(user, room, mes);
-        room.getMessages().add(message);
-        return roomPersistence.save(room);
+        room.getMessages().add(messageService.addMessageToRoom(message, room.getId()));
+        return room;
     }
 
     @Override
