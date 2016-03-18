@@ -27,9 +27,11 @@ public class RoomServiceImpl implements RoomService {
     public static final String YOU_DON_T_BELONG_THIS_ROOM = "You don't belong this room!";
     public static final String THIS_IS_DIALOG = "This is dialog!";
     public static final String REPEATED_REQUEST = "User is already in this chat!";
-    public static final String ROOM_NOT_FOUND = "Room not found!";
     public static final String ADD_YOURSELF_TO_CHAT = "You can't add yourself to chat!";
     public static final String YOU_DON_T_HAVE_RIGHTS_TO_DELETE = "You don't have rights to delete!";
+    public static final String ACCESS_DENIED_RIGHTS = "User doesn't have rights!";
+    public static final String ROOM_NOT_FOUND = "Room not found!";
+    public static final String ERROR_CREATE_CHAT_WITHOUT_USER = "You can't create chat without user(s)!";
 
     @Autowired
     private UserService userService;
@@ -39,6 +41,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     private RelationService relationService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Transactional
     @Override
@@ -50,44 +55,62 @@ public class RoomServiceImpl implements RoomService {
         return roomPersistence.save(room);
     }
 
-    //todo refactor
+    //todo ++ refactor
     @Override
     public Room startChatting(RoomCreateDto roomDto) {
-        Set<User> receivers = new HashSet<>();
         User currentUser = AuthenticatedUtils.getCurrentAuthUser();
-        roomDto.getUsersId().forEach(receiverId -> {
-            User receiver = userService.findUserById(receiverId);
-            if (receiver == null) {
-                throw new EntityNotFoundException(USER_NOT_FOUND);
-            }
-            if (relationService.isSomeoneInBlacklist(currentUser, receiver)) {
-                throw new IllegalArgumentException(USER_IN_BLACKLIST);
-            }
-            receivers.add(receiver);
-        });
+
+        List<User> receivers = userService.findUsersByIds(roomDto.getUsersId());
+
+        if (relationService.isSomeoneInBlacklist(currentUser, receivers)) {
+            throw new IllegalArgumentException(USER_IN_BLACKLIST);
+        }
 
         if (receivers.size() < 1) {
-            throw new IllegalArgumentException("You can't create chat without user(s)!");
-        }
-
-        Room room = findDialog(currentUser, receivers.iterator().next());
-        if (receivers.size() == 1 && room != null) {
-            Message message = new Message(currentUser, room, roomDto.getMessage());
-            room.getMessages().add(message);
-            roomPersistence.flush();
-            return roomPersistence.save(room);
-        }
-
-        room = createRoom();
-        if (receivers.size() > 1) {
-            room.setTitle(roomDto.getTitle());
-            room.setDialog(false);
+            throw new IllegalArgumentException(ERROR_CREATE_CHAT_WITHOUT_USER);
+        } else if (receivers.size() == 1) {
+            return getDialog(currentUser, receivers.get(0), roomDto.getMessage());
         } else {
-            room.setDialog(true);
+            return getChat(currentUser, receivers, roomDto);
         }
+    }
 
+    private Room getChat(User currentUser, List<User> receivers, RoomCreateDto roomDto) {
+        Room room = createRoom();
+
+        room.setTitle(roomDto.getTitle());
+        room.setDialog(false);
         room.getUsers().addAll(receivers);
         room.getMessages().add(new Message(currentUser, room, roomDto.getMessage()));
+
+        return roomPersistence.save(room);
+    }
+
+    private Room getDialog(User sender, User receiver, String message) {
+        Room room = findDialog(sender, receiver);
+
+        if (room == null) {
+            room = createRoom();
+            room.setDialog(true);
+            room.getUsers().add(receiver);
+
+        }
+
+        return addMessageToRoom(room.getId(), message);
+    }
+
+    @Override
+    public Room addMessageToRoom(String roomId, String mes) {
+        Room room = findRoom(roomId);
+        if (room == null) {
+            throw new EntityNotFoundException(ROOM_NOT_FOUND);
+        }
+        User user = AuthenticatedUtils.getCurrentAuthUser();
+        if (!room.getUsers().contains(user)) { //todo to perm serv
+            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
+        }
+        Message message = new Message(user, room, mes);
+        room.getMessages().add(message);
         return roomPersistence.save(room);
     }
 

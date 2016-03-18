@@ -22,7 +22,7 @@ public class WebSocketAspect {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @Pointcut("execution(* com.socnet.service.impl.MessageServiceImpl.addMessageToRoom(..))" +
+    @Pointcut("execution(* com.socnet.service.impl.RoomServiceImpl.addMessageToRoom(..))" +
             "|| execution(* com.socnet.service.impl.RoomServiceImpl.startChatting(..))")
     public void newMessage() {
     }

@@ -39,21 +39,6 @@ public class MessageServiceImpl implements MessageService {
         return room.getMessages();
     }
 
-    @Override
-    public Message addMessageToRoom(String roomId, String mes) {
-        User user = AuthenticatedUtils.getCurrentAuthUser();
-        Room room = roomService.findRoom(roomId);
-        if (!room.getUsers().contains(user)) { //todo to perm serv
-            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
-        }
-        Message message = new Message();
-        message.setCreator(user);
-        message.setRoom(room);
-        message.setMessage(mes);
-        room.getMessages().add(message);
-        return messagePersistence.save(message);
-    }
-
 
     @Override
     public void deleteMessageFromRoom(String messageId) {

@@ -27,4 +27,6 @@ public interface RelationService {
     boolean isFriends(User user1, User user2);
 
     boolean isSomeoneInBlacklist(User user1, User user2);
+
+    boolean isSomeoneInBlacklist(User user1, List<User> users);
 }

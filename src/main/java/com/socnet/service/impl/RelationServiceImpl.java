@@ -184,4 +184,13 @@ public class RelationServiceImpl implements RelationService {
         }
         return false;
     }
+    @Override
+    public boolean isSomeoneInBlacklist(User user1, List<User> users){
+        for(User user2:users) {
+            if(isSomeoneInBlacklist(user1,user2)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

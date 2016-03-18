@@ -66,8 +66,7 @@ public class User extends BaseEntity implements Attached {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Wall wall;
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts; //todo remove this fields from User model
+    //todo ++ remove this fields from User model
 
     @JsonView(UserExtendView.class)
     @Enumerated(EnumType.STRING)
@@ -91,7 +90,7 @@ public class User extends BaseEntity implements Attached {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @Transient
-    private List<Asset> avatars; //todo rename to avatars
+    private List<Asset> avatars; //todo ++ rename to avatars
 
     //todo +++ prepersist and preupdate where email.toLowerCase()
 

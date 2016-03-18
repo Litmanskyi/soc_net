@@ -3,6 +3,7 @@ package com.socnet.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.socnet.entity.Message;
 import com.socnet.service.MessageService;
+import com.socnet.service.RoomService;
 import com.socnet.validation.validators.MessageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -21,6 +22,9 @@ public class MessageController {
     @Autowired
     private MessageValidator messageValidator;
 
+    @Autowired
+    private RoomService roomService;
+
     @InitBinder
     protected void initBinder(WebDataBinder binder)
             throws Exception {
@@ -37,8 +41,8 @@ public class MessageController {
     @JsonView(Message.MessageView.class)
     @RequestMapping(method = RequestMethod.POST)
     public Message addMessageToRoom(@PathVariable("roomId") String roomId,
-                                    @RequestBody @Valid String message) {//todo change params String message, check length below
-        //       return messageService.addMessageToRoom(roomId, message);
+                                    @RequestBody @Valid String message) {//todo ++ change params String message, -- check length below
+        //       return roomService.addMessageToRoom(roomId, message);
         return null;
     }
 
