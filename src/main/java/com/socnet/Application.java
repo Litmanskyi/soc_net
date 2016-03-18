@@ -18,9 +18,7 @@ import java.io.File;
 public class Application {
 
     private static ConfigurableApplicationContext run;
-
-    //public final static String ROOT = "src/main/resources/upload-dir/";//todo ++ set it in props
-
+    //todo ++ set it in props
     public static void main(String[] args) {
         run = SpringApplication.run(Application.class, args);
     }

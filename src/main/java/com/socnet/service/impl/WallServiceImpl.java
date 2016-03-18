@@ -1,6 +1,5 @@
 package com.socnet.service.impl;
 
-
 import com.socnet.entity.Post;
 import com.socnet.entity.User;
 import com.socnet.entity.Wall;
@@ -10,7 +9,6 @@ import com.socnet.service.UserService;
 import com.socnet.service.WallService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -28,9 +26,7 @@ public class WallServiceImpl implements WallService {
 
     @Autowired
     PostService postService;
-
     //todo +++ delete
-
     @Override
     public Wall getWallByUserId(String id) {
         User user = userService.findUserById(id);

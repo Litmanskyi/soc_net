@@ -32,10 +32,10 @@ public class RoomServiceImpl implements RoomService {
     public static final String ERROR_CREATE_CHAT_WITHOUT_USER = "You can't create chat without user(s)!";
 
     @Autowired
-    private UserService userService;
+    private RoomPersistence roomPersistence;
 
     @Autowired
-    private RoomPersistence roomPersistence;
+    private UserService userService;
 
     @Autowired
     private RelationService relationService;

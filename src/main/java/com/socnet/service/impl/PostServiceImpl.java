@@ -7,6 +7,7 @@ import com.socnet.persistence.PostPersistence;
 import com.socnet.service.PostService;
 import com.socnet.service.UserService;
 import com.socnet.service.WallService;
+import com.socnet.service.permission.PermissionService;
 import com.socnet.utility.AuthenticatedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,44 +27,8 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private UserService userService;
 
-    @Transactional
-    @Override
-    public Post editPost(Post p) {
-
-        Post post = findPost(p.getId());
-
-        User currentAuthUser = AuthenticatedUtils.getCurrentAuthUser();
-        if (post == null) {
-            throw new EntityNotFoundException(POST_NOT_FOUND);
-        }
-        if (!post.getCreator().getId().equals(currentAuthUser.getId())) {
-            throw new IllegalArgumentException("Insufficient rights for editing!");
-        }
-
-        post.setMessage(p.getMessage());
-        return postPersistence.save(post);
-    }
-
-
-    @Transactional
-    @Override
-    public void deletePost(String postId) {
-        Post post = findPost(postId);
-        User user = AuthenticatedUtils.getCurrentAuthUser();
-        if (post == null) {
-            throw new EntityNotFoundException(POST_NOT_FOUND);
-        }
-        if (!(post.getCreator().getId().equals(user.getId())
-                || post.getWall().getUser().getId().equals(user.getId()))) {
-            throw new IllegalArgumentException("Insufficient rights for editing!");
-        }
-        postPersistence.delete(postId);
-    }
-
-    @Override
-    public Post findPost(String id) {
-        return postPersistence.findOne(id);
-    }
+    @Autowired
+    private PermissionService permissionService;
 
     /**
      * @param userId user on whose wall the post will be attached
@@ -82,4 +47,42 @@ public class PostServiceImpl implements PostService {
         post.setWall(user.getWall());
         return postPersistence.save(post);
     }
+
+    @Transactional
+    @Override
+    public Post editPost(Post p) {
+
+        Post post = findPost(p.getId());
+
+        User currentAuthUser = AuthenticatedUtils.getCurrentAuthUser();
+        if (post == null) {
+            throw new EntityNotFoundException(POST_NOT_FOUND);
+        }
+        if (!post.getCreator().getId().equals(currentAuthUser.getId())) {
+            throw new IllegalArgumentException("Insufficient rights for editing!");
+        }
+
+        post.setMessage(p.getMessage());
+        return postPersistence.save(post);
+    }
+
+    @Transactional
+    @Override
+    public void deletePost(String postId) {
+        User currentUser = AuthenticatedUtils.getCurrentAuthUser();
+        Post post = findPost(postId);
+        if (post == null) {
+            throw new EntityNotFoundException(POST_NOT_FOUND);
+        }
+        if (permissionService.checkPostPermission(currentUser, post)) {
+            throw new IllegalArgumentException("Insufficient rights for editing!");
+        }
+        postPersistence.delete(postId);
+    }
+
+    @Override
+    public Post findPost(String id) {
+        return postPersistence.findOne(id);
+    }
+
 }

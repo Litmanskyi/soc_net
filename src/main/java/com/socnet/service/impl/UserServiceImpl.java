@@ -36,9 +36,9 @@ public class UserServiceImpl implements UserService {
         return userPersistence.findAll();
     }
 
+    //todo do not delete entity forever
     @Transactional
     @Override
-    //todo do not delete entity forever
     public void deleteUser() {
         User user = AuthenticatedUtils.getCurrentAuthUser();
         userPersistence.delete(user.getId());

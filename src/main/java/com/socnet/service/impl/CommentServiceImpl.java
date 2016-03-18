@@ -1,11 +1,13 @@
 package com.socnet.service.impl;
 
+import com.netflix.discovery.converters.Auto;
 import com.socnet.entity.Comment;
 import com.socnet.entity.Post;
 import com.socnet.entity.User;
 import com.socnet.persistence.CommentPersistence;
 import com.socnet.service.CommentService;
 import com.socnet.service.PostService;
+import com.socnet.service.permission.PermissionService;
 import com.socnet.utility.AuthenticatedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,35 +23,44 @@ public class CommentServiceImpl implements CommentService {
     public static final String YOU_DON_T_HAVE_ENOUGH_RIGHTS = "You don't have enough rights!";
 
     @Autowired
+    private CommentPersistence commentPersistence;
+
+    @Autowired
     private PostService postService;
 
     @Autowired
-    private CommentPersistence commentPersistence;
+    private PermissionService permissionService;
 
     @Override
-    public Comment addCommentToPost(Comment comment, String idPost) {
-        Post post = postService.findPost(idPost);
-        User user = AuthenticatedUtils.getCurrentAuthUser();
+    public Comment addCommentToPost(Comment comment, String postId) {
+        User currentUser = AuthenticatedUtils.getCurrentAuthUser();
+
+        Post post = postService.findPost(postId);
         if (post == null) {
             throw new EntityNotFoundException(POST_NOT_FOUND);
         }
+
         post.getComments().add(comment);
         comment.setPost(post);
-        comment.setCreator(user);
+        comment.setCreator(currentUser);
         return commentPersistence.save(comment);
     }
 
     @Override
     public void deleteComment(String commentId) {
         Comment comment = findComment(commentId);
-        User user = AuthenticatedUtils.getCurrentAuthUser();
+        User currentUser = AuthenticatedUtils.getCurrentAuthUser();
         if (comment == null) {
             throw new EntityNotFoundException(COMMENT_NOT_FOUND);
         }
-        if (!(comment.getCreator().equals(user)//todo permission
-                || comment.getPost().getWall().getUser().equals(user))) {
+        //todo +++ permission
+        if(permissionService.checkCommentPermission(currentUser, comment)){
             throw new AccessDeniedException(YOU_DON_T_HAVE_ENOUGH_RIGHTS);
         }
+
+//        if (!(comment.getCreator().equals(currentUser) || comment.getPost().getWall().getUser().equals(currentUser))) {
+//            throw new AccessDeniedException(YOU_DON_T_HAVE_ENOUGH_RIGHTS);
+//        }
         commentPersistence.delete(comment);
     }
 

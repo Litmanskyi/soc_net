@@ -5,6 +5,7 @@ import com.socnet.entity.asset.AvatarAsset;
 import com.socnet.entity.enumaration.FileType;
 import com.socnet.persistence.asset.AvatarPersistence;
 import com.socnet.service.AvatarService;
+import com.socnet.service.permission.PermissionService;
 import com.socnet.utility.AuthenticatedUtils;
 import com.socnet.utility.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -24,9 +24,13 @@ public class AvatarServiceImpl implements AvatarService {
     public static final String AVATAR_NOT_FOUND = "Avatar not found!";
     public static final String NOT_YOUR_AVATAR = "It's not your avatar";
     public static final String EMPTY_FILE = "You failed to upload because the file was empty";
+    public static final String ONLY_JPG = "Only JPG images are accepted";
 
     @Autowired
     private AvatarPersistence avatarPersistence;
+
+    @Autowired
+    private PermissionService permissionService;
 
     @Transactional
     @Override
@@ -36,15 +40,15 @@ public class AvatarServiceImpl implements AvatarService {
             throw new IllegalArgumentException(EMPTY_FILE);
         }
 
-        User user = AuthenticatedUtils.getCurrentAuthUser();
+        User currentUser = AuthenticatedUtils.getCurrentAuthUser();
 
         // todo ++ move extra logic in AssetsServices and reuse it on other places in project
         String path = FileUtils.uploadFile(file, FileType.IMAGE);
-        AvatarAsset avatarAsset = new AvatarAsset(user, path, user);
+        AvatarAsset avatarAsset = new AvatarAsset(currentUser, path, currentUser);
         //
 
         avatarAsset.setCurrent(true);
-        AvatarAsset currentAvatarAsset = findCurrentAvatarByUser(user);
+        AvatarAsset currentAvatarAsset = findCurrentAvatarByUser(currentUser);
         if (currentAvatarAsset != null) {
             currentAvatarAsset.setCurrent(false);
             avatarPersistence.save(currentAvatarAsset);
@@ -55,14 +59,18 @@ public class AvatarServiceImpl implements AvatarService {
     @Transactional
     @Override
     public void deleteAvatar(String id) {
-        User user = AuthenticatedUtils.getCurrentAuthUser();
+        User currentUser = AuthenticatedUtils.getCurrentAuthUser();
         AvatarAsset avatar = findAvatarById(id);
+
         if (avatar == null) {
             throw new EntityNotFoundException(AVATAR_NOT_FOUND);
         }
-        if (!avatar.getUser().equals(user)) { // todo create PermissionService.checkPermission(User user, Object bussinesModel, Class clazz){if(clazz == Post.class){}}
+
+        // todo +++ create PermissionService.checkPermission(User user, Object bussinesModel, Class clazz){if(clazz == Post.class){}}
+        if(!permissionService.checkAssetPermission(currentUser, avatar)){
             throw new AccessDeniedException(NOT_YOUR_AVATAR);
         }
+
         FileUtils.deleteFile(avatar.getPath());
         avatarPersistence.delete(id);
     }

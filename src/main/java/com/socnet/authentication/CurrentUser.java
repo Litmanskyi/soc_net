@@ -9,9 +9,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * Created by anton on 23.02.16.
- */
 @Getter
 public class CurrentUser extends org.springframework.security.core.userdetails.User {
 

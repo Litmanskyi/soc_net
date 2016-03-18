@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,10 @@ public class TestDataInitializer {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Random random = new Random();
 
+    private static final int RELATION_MIN = 5;
+    private static final int RELATION_MAX = 15;
+    private static final int BANNED_PERCENT = 10;
+
     @Autowired
     private UserService userService;
 
@@ -45,14 +50,13 @@ public class TestDataInitializer {
     private PostService postService;
 
     @Autowired
-    private WallService wallService;
-
-    private Path testDataPath;
-
-    @Autowired
     private ConfProperties confProperties;
 
+    @Autowired
+    @Qualifier("currentUserDetailsService")
+    UserDetailsService userDetailsService;
 
+    private Path testDataPath;
 
     @PostConstruct
     public void initPath() {
@@ -60,10 +64,6 @@ public class TestDataInitializer {
     }
 
     public void addTestData() throws IOException {
-
-        // todo need fetch absolute path without classLoader!
-//        testDataPath = Paths.get(confProperties.getTestDataResources());
-
         Files.walkFileTree(testDataPath, new TestDataVisitor());
 
         LOGGER.info("!!!!!!!!!! INITIALIZE TEST DATA FINISHED!!!!!!!!");
@@ -76,8 +76,8 @@ public class TestDataInitializer {
         File usersFile;
         File postsFile;
 
-        User[] userList;
-        Post[] postList;
+        User[] users;
+        Post[] posts;
 
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
@@ -94,49 +94,65 @@ public class TestDataInitializer {
                     throw new IllegalArgumentException(String.format(FILE_EXIST_MESSAGE, postsFile.getName(), dir.getFileName()));
                 }
 
-                userList = objectMapper.readValue(usersFile, User[].class);
-                postList = objectMapper.readValue(postsFile, Post[].class);
+                users = objectMapper.readValue(usersFile, User[].class);
+                posts = objectMapper.readValue(postsFile, Post[].class);
 
                 //todo create method createUsers(User[] users) and same for posts
-                List<User> users = new ArrayList<>();
-                for (User user : userList) {
-                    users.add(userService.createUser(user));
-                }
+                List<User> userList;
 
-                for (Post post : postList) {
-                    User userWall = users.get(random.nextInt(users.size() - 1));
-                    User userPosted = users.get(random.nextInt(users.size() - 1));
-                    login(userPosted.getEmail());
-                    post.setWall(userWall.getWall());
-                    post.setCreator(userPosted);
-                    postService.addPostToUserWall(userWall.getId(), post);
-                }
-                for (User user : userList) {
-                    login(user.getEmail());//todo ++ use random - wrong
-                    for (int i = 0; i < 8; i++) {
-                        try {
-                            int r = random.nextInt(5 - 1 + 1) + 1;
-                            String uId = users.get(random.nextInt(users.size() - 1)).getId();
-                            if (r >= 1 && r <= 4) {
-                                relationService.addFriend(uId);
-                            } else if (r == 5) {
-                                relationService.addToBlacklist(uId);
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Exception" + e.getMessage());
-                        }
-                    }
-                }
+                userList = createUsers(users);
+
+                createPosts(posts, userList);
+
+                createRelations(userList);
+
             }
             return FileVisitResult.CONTINUE;
         }
     }
 
-    @Autowired
-    @Qualifier("currentUserDetailsService")
-    UserDetailsService userDetailsService;
+    private List<User> createUsers(User[] users) {
+        List<User> persistUsers = new ArrayList<>();
+        for (User user : users) {
+            persistUsers.add(userService.createUser(user));
+        }
+        return persistUsers;
+    }
 
-    public void login(String email) {
+    private void createPosts(Post[] posts, List<User> userList) {
+        for (Post post : posts) {
+            User userSender = userList.get(random.nextInt(userList.size()));
+            User userReceiver = userList.get(random.nextInt(userList.size()));
+            login(userSender.getEmail());
+            post.setWall(userReceiver.getWall());
+            post.setCreator(userSender);
+            postService.addPostToUserWall(userReceiver.getId(), post);
+        }
+    }
+
+    private void createRelations(List<User> userList) {
+        for (User user : userList) {
+            login(user.getEmail());//todo +++ use random - wrong
+
+            int quantity = RELATION_MIN + random.nextInt(RELATION_MAX - RELATION_MIN + 1);
+            String targetUserId = userList.get(random.nextInt(userList.size())).getId();
+            int lucky_number = random.nextInt(100);
+
+            for (int i = 0; i < quantity; i++) {
+                try {
+                    if (lucky_number < BANNED_PERCENT) {
+                        relationService.addFriend(targetUserId);
+                    } else {
+                        relationService.addToBlacklist(targetUserId);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Exception" + e.getMessage());
+                }
+            }
+        }
+    }
+
+    private void login(String email) {
         CurrentUser currentUser = (CurrentUser) userDetailsService.loadUserByUsername(email);
         Authentication authenticate = new UsernamePasswordAuthenticationToken(currentUser,
                 currentUser.getPassword(),

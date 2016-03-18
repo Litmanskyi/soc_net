@@ -6,6 +6,7 @@ import com.socnet.entity.User;
 import com.socnet.persistence.MessagePersistence;
 import com.socnet.service.MessageService;
 import com.socnet.service.RoomService;
+import com.socnet.service.permission.PermissionService;
 import com.socnet.utility.AuthenticatedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,6 +27,40 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private PermissionService permissionService;
+
+    @Override
+    public Message addMessageToRoom(String roomId, String mes) {
+        Room room = roomService.findRoom(roomId);
+        if (room == null) {
+            throw new EntityNotFoundException(ROOM_NOT_FOUND);
+        }
+        User user = AuthenticatedUtils.getCurrentAuthUser();
+        if (!permissionService.checkRoomPermission(user, room)) { //todo +++ to perm serv
+            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
+        }
+
+        return messagePersistence.save(new Message(user, room, mes));
+    }
+
+    @Override
+    public void deleteMessageFromRoom(String messageId) {
+        User user = AuthenticatedUtils.getCurrentAuthUser();
+        Message message = messagePersistence.findOne(messageId);
+        Room room = message.getRoom();
+
+        if (!room.getUsers().contains(user)) {
+            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
+        }
+
+        if (!message.getCreator().equals(user)) {
+            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
+        }
+
+        messagePersistence.delete(message);
+    }
+
     @Override
     public List<Message> findMessagesByRoomId(String roomId) {
         User user = AuthenticatedUtils.getCurrentAuthUser();
@@ -37,38 +72,5 @@ public class MessageServiceImpl implements MessageService {
             throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
         }
         return room.getMessages();
-    }
-
-    @Override
-    public Message addMessageToRoom(String roomId, String mes) {
-        Room room = roomService.findRoom(roomId);
-        if (room == null) {
-            throw new EntityNotFoundException(ROOM_NOT_FOUND);
-        }
-        User user = AuthenticatedUtils.getCurrentAuthUser();
-        if (!room.getUsers().contains(user)) { //todo to perm serv
-            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
-        }
-
-        return messagePersistence.save(new Message(user, room, mes));
-    }
-
-
-    @Override
-    public void deleteMessageFromRoom(String messageId) {
-
-        User user = AuthenticatedUtils.getCurrentAuthUser();
-
-        Message message = messagePersistence.findOne(messageId);
-        Room room = message.getRoom();
-
-        if (!room.getUsers().contains(user)) {
-            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
-        }
-        if (!message.getCreator().equals(user)) {
-            throw new AccessDeniedException(ACCESS_DENIED_RIGHTS);
-        }
-
-        messagePersistence.delete(message);
     }
 }
