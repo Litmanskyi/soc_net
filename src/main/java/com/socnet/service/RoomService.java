@@ -26,8 +26,6 @@ public interface RoomService {
 
     Set<User> findUsersByRoom(String roomId);
 
-    void leaveRoom(String roomId);
-
     List<Room> findRoomsByCurrentUser();
 
     Room setNewTitle(String roomId, String title);

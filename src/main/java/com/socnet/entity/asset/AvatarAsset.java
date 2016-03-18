@@ -14,8 +14,16 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("AVATAR") //todo +++ in enum
 public class AvatarAsset extends ImageAsset {
-    public interface AvatarAssetView extends ImageAsset.AssetView{}
+    public interface AvatarAssetView extends ImageAsset.AssetView {
+    }
 
     @Column(name = "is_current")
     private boolean isCurrent;
+
+    public AvatarAsset() {
+    }
+
+    public AvatarAsset(User user, String path, Attached attached) {
+        super(user, path, attached);
+    }
 }

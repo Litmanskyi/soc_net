@@ -2,6 +2,7 @@ package com.socnet.service.impl;
 
 import com.socnet.entity.User;
 import com.socnet.entity.asset.AvatarAsset;
+import com.socnet.entity.enumaration.FileType;
 import com.socnet.persistence.asset.AvatarPersistence;
 import com.socnet.service.AvatarService;
 import com.socnet.utility.AuthenticatedUtils;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.List;
 
@@ -24,7 +24,6 @@ public class AvatarServiceImpl implements AvatarService {
     public static final String AVATAR_NOT_FOUND = "Avatar not found!";
     public static final String NOT_YOUR_AVATAR = "It's not your avatar";
     public static final String EMPTY_FILE = "You failed to upload because the file was empty";
-    public static final String ONLY_JPG = "Only JPG images are accepted";
 
     @Autowired
     private AvatarPersistence avatarPersistence;
@@ -39,15 +38,9 @@ public class AvatarServiceImpl implements AvatarService {
 
         User user = AuthenticatedUtils.getCurrentAuthUser();
 
-        // todo move extra logic in AssetsServices and reuse it on other places in project
-        validateImage(file);
-        String dir = Paths.get(user.getId(), "avatars/").toString();
-        String fileName = String.valueOf(Calendar.getInstance().getTimeInMillis());
-        String path = FileUtils.uploadFile(dir, fileName, file);
-        AvatarAsset avatarAsset = new AvatarAsset();
-        avatarAsset.setUser(user);
-        avatarAsset.setPath(path);
-        avatarAsset.setAttached(user);
+        // todo ++ move extra logic in AssetsServices and reuse it on other places in project
+        String path = FileUtils.uploadFile(file, FileType.IMAGE);
+        AvatarAsset avatarAsset = new AvatarAsset(user, path, user);
         //
 
         avatarAsset.setCurrent(true);
@@ -97,9 +90,4 @@ public class AvatarServiceImpl implements AvatarService {
         return avatarPersistence.findAvatarsByUserId(user.getId());
     }
 
-    private static void validateImage(MultipartFile image) {
-        if (!image.getContentType().equals("image/jpeg")) { // todo move to constants and create method public static boolean isValidFile(File file, Type type -- image, video, ect)
-            throw new IllegalArgumentException(ONLY_JPG);
-        }
-    }
 }

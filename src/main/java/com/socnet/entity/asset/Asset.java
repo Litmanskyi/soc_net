@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
-import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.MetaValue;
 
 import javax.persistence.*;
@@ -53,4 +52,13 @@ public class Asset extends BaseEntity {
     @JsonView(AssetView.class)
     @Column(name = "path", nullable = false, length = 255)
     private String path;
+
+    public Asset() {
+    }
+
+    public Asset(User user, String path, Attached attached) {
+        this.user = user;
+        this.path = path;
+        this.attached = attached;
+    }
 }

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AssetServiceImpl implements AssetService{
+public class AssetServiceImpl implements AssetService {
     @Autowired
     private AssetPersistence assetPersistence;
 
-    public List<Asset> findAssetsByAttachedId(String attachedId){
+    public List<Asset> findAssetsByAttachedId(String attachedId) {
         return assetPersistence.findByAttachedId(attachedId);
     }
 }

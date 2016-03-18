@@ -78,6 +78,7 @@ public class RoomServiceImpl implements RoomService {
 
         room.setTitle(roomDto.getTitle());
         room.setDialog(false);
+        room.setAdmin(currentUser);
         room.getUsers().addAll(receivers);
         room.getMessages().add(messageService.addMessageToRoom(roomDto.getMessage(), room.getId()));
 
@@ -91,7 +92,6 @@ public class RoomServiceImpl implements RoomService {
             room = createRoom();
             room.setDialog(true);
             room.getUsers().add(receiver);
-
         }
         room.getMessages().add(messageService.addMessageToRoom(message, room.getId()));
         return room;
@@ -164,9 +164,6 @@ public class RoomServiceImpl implements RoomService {
     }
 
     //todo +++ unite leave and delete from room
-    @Override
-    public void leaveRoom(String roomId) {
-    }
 
     @Override
     public Set<User> findUsersByRoom(String roomId) {

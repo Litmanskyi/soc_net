@@ -6,6 +6,7 @@ import com.socnet.entity.Room;
 import com.socnet.entity.User;
 import com.socnet.entity.dto.RoomCreateDto;
 import com.socnet.service.RoomService;
+import com.socnet.utility.AuthenticatedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +60,7 @@ public class RoomController {
     @JsonView(Room.RoomMessageView.class)
     @RequestMapping(value = "/{id}/leave", method = RequestMethod.DELETE)
     public void leaveUserFromRoom(@PathVariable("id") String roomId) {
-        roomService.leaveRoom(roomId);
+        roomService.deleteUserFromRoom(roomId, AuthenticatedUtils.getCurrentAuthUser().getId());
     }
 
     @JsonView(Room.RoomView.class)
