@@ -2,7 +2,6 @@ package com.socnet.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.socnet.entity.asset.Asset;
-import com.socnet.entity.asset.Attached;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -19,8 +19,7 @@ import javax.validation.constraints.Size;
 @MappedSuperclass
 public abstract class AbstractContent extends BaseEntity implements Attached{
 
-    public interface AbstractContentView extends User.UserView {
-    }
+    public interface AbstractContentView extends User.UserView {}
 
     @JsonView(AbstractContentView.class)
     @NotNull

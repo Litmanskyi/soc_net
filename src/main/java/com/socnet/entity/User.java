@@ -24,15 +24,12 @@ import java.util.Set;
 @lombok.Setter
 @lombok.ToString(exclude = {"wall", "posts", "relations"})
 
-
 @UniqueEmail
 @Entity
 public class User extends BaseEntity implements Attached {
 
-    public interface UserView extends Asset.AssetView {
-    }
-    public interface UserExtendView extends Asset.AssetView{
-    }
+    public interface UserView extends Asset.AssetView {}
+    public interface UserExtendView extends Asset.AssetView{}
 
     @JsonView(UserView.class)
     @NotNull
@@ -66,8 +63,6 @@ public class User extends BaseEntity implements Attached {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Wall wall;
 
-    //todo ++ remove this fields from User model
-
     @JsonView(UserExtendView.class)
     @Enumerated(EnumType.STRING)
     @Column
@@ -92,9 +87,7 @@ public class User extends BaseEntity implements Attached {
     @Transient
     private List<Asset> avatars; //todo ++ rename to avatars
 
-    //todo +++ prepersist and preupdate where email.toLowerCase()
-
-    @PrePersist
+    @PrePersist //todo +++ prepersist and preupdate where email.toLowerCase()
     public void beforeSave(){
         createWallForNewUser();
         setEmailToLowerCase();

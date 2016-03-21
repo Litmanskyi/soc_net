@@ -14,8 +14,7 @@ import java.util.List;
 @Entity
 public class Wall extends BaseEntity {
 
-    public interface WallView extends User.UserView {
-    }
+    public interface WallView extends User.UserView {}
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -23,5 +22,4 @@ public class Wall extends BaseEntity {
 
     @OneToMany(mappedBy = "wall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
-
 }

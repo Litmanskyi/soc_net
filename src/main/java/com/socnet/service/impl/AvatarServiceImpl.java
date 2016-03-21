@@ -74,12 +74,10 @@ public class AvatarServiceImpl implements AvatarService {
         avatarPersistence.delete(id);
     }
 
-
     @Override
     public AvatarAsset findAvatarById(String id) {
         return avatarPersistence.findOne(id);
     }
-
 
     @Override
     public AvatarAsset findCurrentAvatarByUser(User user) {

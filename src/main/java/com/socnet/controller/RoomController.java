@@ -20,10 +20,11 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/room")
 public class RoomController {
-    @Autowired
-    private RoomService roomService;
 
     private Logger logger = Logger.getLogger(RoomController.class);
+
+    @Autowired
+    private RoomService roomService;
 
     @JsonView(Room.RoomMessageView.class)
     @RequestMapping(method = RequestMethod.POST)
@@ -46,8 +47,7 @@ public class RoomController {
 
     @JsonView(Room.RoomMessageView.class)
     @RequestMapping(value = "/{roomId}/user/{userId}", method = RequestMethod.DELETE)
-    public Room deleteUserFromRoom(@PathVariable("roomId") String roomId,
-                                   @PathVariable("userId") String userId) {
+    public Room deleteUserFromRoom(@PathVariable("roomId") String roomId, @PathVariable("userId") String userId) {
         return roomService.deleteUserFromRoom(roomId, userId);
     }
 

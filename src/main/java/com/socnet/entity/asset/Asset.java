@@ -18,8 +18,8 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING, length = 8)
 public class Asset extends BaseEntity {
-    public interface AssetView extends BaseView {
-    }
+
+    public interface AssetView extends BaseView {}
 
     @Any(
             metaColumn = @Column(name = "asset_type", length = 3),

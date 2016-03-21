@@ -2,23 +2,16 @@ package com.socnet.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.socnet.entity.User;
-import com.socnet.entity.asset.AvatarAsset;
-import com.socnet.entity.asset.ImageAsset;
-import com.socnet.service.AvatarService;
 import com.socnet.service.UserService;
 import com.socnet.utility.AuthenticatedUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
-
-@RequestMapping("/user")
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired

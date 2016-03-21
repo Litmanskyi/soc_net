@@ -1,6 +1,5 @@
 package com.socnet.service.impl;
 
-import com.netflix.discovery.converters.Auto;
 import com.socnet.entity.Comment;
 import com.socnet.entity.Post;
 import com.socnet.entity.User;
@@ -49,18 +48,17 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(String commentId) {
         Comment comment = findComment(commentId);
-        User currentUser = AuthenticatedUtils.getCurrentAuthUser();
+
         if (comment == null) {
             throw new EntityNotFoundException(COMMENT_NOT_FOUND);
         }
+
+        User currentUser = AuthenticatedUtils.getCurrentAuthUser();
         //todo +++ permission
         if(permissionService.checkCommentPermission(currentUser, comment)){
             throw new AccessDeniedException(YOU_DON_T_HAVE_ENOUGH_RIGHTS);
         }
 
-//        if (!(comment.getCreator().equals(currentUser) || comment.getPost().getWall().getUser().equals(currentUser))) {
-//            throw new AccessDeniedException(YOU_DON_T_HAVE_ENOUGH_RIGHTS);
-//        }
         commentPersistence.delete(comment);
     }
 

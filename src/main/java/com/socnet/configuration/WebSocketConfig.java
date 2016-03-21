@@ -1,7 +1,5 @@
 package com.socnet.configuration;
 
-import com.socnet.socket.WebSocketHandler;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.util.AntPathMatcher;

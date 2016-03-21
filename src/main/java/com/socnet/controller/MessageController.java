@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/room/{roomId}/message")
 public class MessageController {
+
     @Autowired
     private MessageService messageService;
 
@@ -39,11 +40,9 @@ public class MessageController {
     }
 
     @JsonView(Message.MessageView.class)
-    @RequestMapping(method = RequestMethod.POST)
-    public Message addMessageToRoom(@PathVariable("roomId") String roomId,
-                                    @RequestBody @Valid String message) {//todo +++ change params String message, -- check length below
-        //       return roomService.addMessageToRoom(roomId, message);
-        return null;
+    @RequestMapping(method = RequestMethod.POST) //todo +++ change params String message, -- check length below
+    public Message addMessageToRoom(@PathVariable("roomId") String roomId, @RequestBody @Valid String message) {
+        return messageService.addMessageToRoom(roomId, message);
     }
 
     @RequestMapping(value = "/{messageId}", method = RequestMethod.DELETE)

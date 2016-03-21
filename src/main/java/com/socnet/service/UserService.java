@@ -9,19 +9,19 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserService {
-    List<User> findAllUsers();
-
-    void deleteUser();
+    User createUser(User user);
 
     User updateUser(User user);
 
-    User createUser(User user);
+    void deleteUser();
+
+    User updatePassword(User updUser);
 
     User findUserById(String id);
 
     User findUserByEmail(String email);
 
-    User updatePassword(User updUser);
+    List<User> findAllUsers();
 
     List<User> findUsersByIds(Set<String> usersIds);
 }

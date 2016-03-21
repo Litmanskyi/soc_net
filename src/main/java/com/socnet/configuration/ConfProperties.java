@@ -1,14 +1,14 @@
 package com.socnet.configuration;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-@Component("props")
 
 @Getter
 @Setter
+
+@Component("props")
 public class ConfProperties {
 
     @Value("${test.data.initializer}")

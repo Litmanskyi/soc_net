@@ -1,12 +1,10 @@
 package com.socnet.validation.constraints;
 
-
 import com.socnet.Application;
 import com.socnet.entity.User;
 import com.socnet.service.UserService;
 import com.socnet.validation.annotations.UniqueEmail;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

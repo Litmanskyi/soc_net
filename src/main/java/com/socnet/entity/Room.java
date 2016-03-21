@@ -17,11 +17,9 @@ import java.util.Set;
 @Entity
 public class Room extends BaseEntity {
 
-    public interface RoomView extends User.UserView {
-    }
+    public interface RoomView extends User.UserView {}
 
-    public interface RoomMessageView extends AbstractContent.AbstractContentView, RoomView {
-    }
+    public interface RoomMessageView extends AbstractContent.AbstractContentView, RoomView {}
 
     @JsonView(RoomView.class)
     @Column(length = 200)

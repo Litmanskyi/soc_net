@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 
-@Component
 @Aspect
+@Component
 public class AttachedAspect {
 
     @Autowired

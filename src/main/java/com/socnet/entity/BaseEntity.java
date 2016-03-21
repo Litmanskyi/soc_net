@@ -15,8 +15,7 @@ import java.util.Date;
 @MappedSuperclass
 public class BaseEntity {
 
-    public interface BaseView {
-    }
+    public interface BaseView {}
 
     @JsonView(BaseView.class)
     @Id
@@ -54,9 +53,7 @@ public class BaseEntity {
         createDate = new Date();
     }
 
-
-    //todo check it
-    @PreDestroy
+    @PreDestroy //todo check it
     public void setDeleteDate(){deleteDate = new Date();}
 
     @Override

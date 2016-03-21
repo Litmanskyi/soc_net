@@ -6,10 +6,12 @@ import com.socnet.entity.User;
 import com.socnet.service.RelationService;
 import com.socnet.utility.AuthenticatedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
 
 @RestController
 public class RelationController {

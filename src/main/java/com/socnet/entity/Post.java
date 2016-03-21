@@ -5,8 +5,6 @@ import com.socnet.entity.asset.Asset;
 import com.socnet.entity.asset.Attached;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ManyToAny;
-import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,8 +14,6 @@ import java.util.List;
 @Getter
 @lombok.ToString(exclude = {"wall"})
 
-
-@SQLDelete(sql="")
 @Entity
 public class Post extends AbstractContent implements Attached {
 

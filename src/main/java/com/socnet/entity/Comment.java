@@ -18,8 +18,7 @@ import java.util.List;
 @Entity
 public class Comment extends AbstractContent {
 
-    public interface CommentView extends AbstractContent.AbstractContentView {
-    }
+    public interface CommentView extends AbstractContent.AbstractContentView {}
 
     @JsonView(CommentView.class)
     @NotNull

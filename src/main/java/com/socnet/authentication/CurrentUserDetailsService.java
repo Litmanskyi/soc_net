@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CurrentUserDetailsService implements UserDetailsService { //todo ++ move to SpringSecurity package
 
+    private Logger logger = Logger.getLogger(getClass());
+
     @Autowired
     private UserService userService;
-
-    private Logger logger = Logger.getLogger(getClass());
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
