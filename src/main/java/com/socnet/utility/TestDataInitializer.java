@@ -97,7 +97,7 @@ public class TestDataInitializer {
                 users = objectMapper.readValue(usersFile, User[].class);
                 posts = objectMapper.readValue(postsFile, Post[].class);
 
-                //todo create method createUsers(User[] users) and same for posts
+                //todo +++ create method createUsers(User[] users) and same for posts
                 List<User> userList;
 
                 userList = createUsers(users);

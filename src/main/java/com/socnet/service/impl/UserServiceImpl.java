@@ -41,7 +41,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser() {
         User user = AuthenticatedUtils.getCurrentAuthUser();
-        userPersistence.delete(user.getId());
+        //userPersistence.delete(user.getId());
+        userPersistence.softDelete(user.getId());
         logger.info(String.format(DELETE_LOG, user.getFirstName(), user.getLastName(), user.getId()));
     }
 

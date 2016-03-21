@@ -41,7 +41,7 @@ public class MessageController {
     @JsonView(Message.MessageView.class)
     @RequestMapping(method = RequestMethod.POST)
     public Message addMessageToRoom(@PathVariable("roomId") String roomId,
-                                    @RequestBody @Valid String message) {//todo ++ change params String message, -- check length below
+                                    @RequestBody @Valid String message) {//todo +++ change params String message, -- check length below
         //       return roomService.addMessageToRoom(roomId, message);
         return null;
     }

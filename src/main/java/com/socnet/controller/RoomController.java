@@ -23,7 +23,7 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    Logger logger = Logger.getLogger(RoomController.class);
+    private Logger logger = Logger.getLogger(RoomController.class);
 
     @JsonView(Room.RoomMessageView.class)
     @RequestMapping(method = RequestMethod.POST)

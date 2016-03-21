@@ -9,9 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-/**
- * Created by anton on 24.02.16.
- */
 @Aspect
 @Component
 public class LoggerAspect {

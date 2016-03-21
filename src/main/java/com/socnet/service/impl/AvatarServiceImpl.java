@@ -24,7 +24,6 @@ public class AvatarServiceImpl implements AvatarService {
     public static final String AVATAR_NOT_FOUND = "Avatar not found!";
     public static final String NOT_YOUR_AVATAR = "It's not your avatar";
     public static final String EMPTY_FILE = "You failed to upload because the file was empty";
-    public static final String ONLY_JPG = "Only JPG images are accepted";
 
     @Autowired
     private AvatarPersistence avatarPersistence;

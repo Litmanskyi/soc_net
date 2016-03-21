@@ -22,8 +22,7 @@ public class WebSocketController {
 
     @MessageMapping("user.{userId}.message")
     public void listenerMessages(Message message, @DestinationVariable(value = "userId")
-    String userId, Principal principal,
-                                 SimpMessageHeaderAccessor headerAccessor) throws Exception {
+    String userId, Principal principal, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         logger.info("user id: " + userId + ", message: " + message.getMessage());
 //        simp.convertAndSendToUser(principal.getName(), "/queue/message", Collections.singletonMap(SimpMessageHeaderAccessor.SESSION_ID_HEADER, headerAccessor.getSessionId()));
 

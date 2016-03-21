@@ -2,6 +2,7 @@ package com.socnet.utility;
 
 import com.socnet.Application;
 import com.socnet.configuration.ConfProperties;
+import com.socnet.entity.User;
 import com.socnet.entity.enumaration.FileType;
 import lombok.Cleanup;
 import org.apache.log4j.Logger;
@@ -12,6 +13,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.Calendar;
 
 public class FileUtils {
@@ -31,20 +33,20 @@ public class FileUtils {
             throw new IllegalArgumentException(FILE_IS_EMPTY);
         }
 
+        User currentUser = AuthenticatedUtils.getCurrentAuthUser();
+
         ConfProperties confProperties = Application.getBean(ConfProperties.class);
-
-        String fileName = String.valueOf(Calendar.getInstance().getTimeInMillis());
-
-        String userDir = Paths.get(fileName, fileType.name() + "/").toString();
+        String fileName = String.valueOf(Instant.now().toEpochMilli());
+        String userDir = Paths.get(currentUser.getId(), fileType.name()).toString();
 
         //todo ++ refactor
-        File pathDir = new File(confProperties.getUploadPath() + userDir);
+        File rootPath = new File(confProperties.getUploadPath() + userDir);
 
-        if (pathDir.mkdirs()) {
-            logger.info("Path directory: '" + pathDir.getPath() + "'was created");
+        if (rootPath.mkdirs()) {
+            logger.info("Path directory: '" + rootPath.getPath() + "'was created");
         }
 
-        File file = new File(pathDir.getPath() + "/" + fileName);
+        File file = new File(Paths.get(rootPath.getPath(), fileName).toString());
 
         try {
             @Cleanup BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
