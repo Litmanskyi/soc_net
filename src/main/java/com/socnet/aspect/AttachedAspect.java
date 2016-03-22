@@ -26,8 +26,10 @@ public class AttachedAspect {
 
     @AfterReturning(value = "controllerPointcut()", returning = "result")
     public void attachedPost(JoinPoint joinPoint, Attached result) {
-        List<Asset> assets = assetService.findAssetsByAttachedId(result.getId());
-        result.setAssets(assets);
+        if(result!=null) {
+            List<Asset> assets = assetService.findAssetsByAttachedId(result.getId());
+            result.setAssets(assets);
+        }
     }
 
     @AfterReturning(value = "controllerPointcut()", returning = "result")

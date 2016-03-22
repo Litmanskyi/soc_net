@@ -59,8 +59,7 @@ public class UserController {
 
     @RequestMapping(value = "/current")
     @JsonView(User.UserView.class)
-    public User currentUser() {
-        return AuthenticatedUtils.getCurrentAuthUser();
+    public User currentUser() {return AuthenticatedUtils.getCurrentAuthUser();
     }
 
 }

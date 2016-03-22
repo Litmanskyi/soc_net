@@ -9,7 +9,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 
 @SpringBootApplication
 //@EnableEurekaClient
-//@PropertySource("classpath:messages.properties")
+//@PropertySource("classpath:messages_en.properties")
 public class Application {
 
     private static ConfigurableApplicationContext run;
@@ -25,7 +25,7 @@ public class Application {
     @Bean
     public MessageSource messageSource() {//todo settings validate message
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages.properties");
+        messageSource.setBasename("messages");
         return messageSource;
     }
 }

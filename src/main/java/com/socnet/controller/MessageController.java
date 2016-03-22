@@ -23,9 +23,6 @@ public class MessageController {
     @Autowired
     private MessageValidator messageValidator;
 
-    @Autowired
-    private RoomService roomService;
-
     @InitBinder
     protected void initBinder(WebDataBinder binder)
             throws Exception {
@@ -40,7 +37,7 @@ public class MessageController {
     }
 
     @JsonView(Message.MessageView.class)
-    @RequestMapping(method = RequestMethod.POST) //todo +++ change params String message, -- check length below
+    @RequestMapping(method = RequestMethod.POST) //todo +++ change params String message, ++ check length below
     public Message addMessageToRoom(@PathVariable("roomId") String roomId, @RequestBody @Valid String message) {
         return messageService.addMessageToRoom(roomId, message);
     }
